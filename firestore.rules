@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+     match /bookings/{bookingId} {
+      allow read: if true;  // Ajusta según tus necesidades de seguridad
+      allow create: if true; // Ajusta según tus necesidades de seguridad
+      allow update, delete: if false; // Restringe actualizaciones y eliminaciones
+    }
+  }
+}
