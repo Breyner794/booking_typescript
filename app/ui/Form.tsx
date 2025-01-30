@@ -34,7 +34,7 @@ import {
 import formSchema from "../../components/validations"
 import {createBooking} from "../../services/bookingService"
 import { useToast } from "@/hooks/use-toast"
-
+import Footer from "@/components/footer"
 // Definicion de las ciudades disponibles
 const CITIES = [
   { value: "CAL", label: "Cali" },
@@ -126,9 +126,9 @@ export default function ProfileForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your full name" {...field} />
+                <Input placeholder="Enter your full name" {...field}/>
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-white">
                 This is your public display name.
               </FormDescription>
               <FormMessage />
@@ -145,7 +145,7 @@ export default function ProfileForm() {
               <FormControl>
                 <Input placeholder="Enter your full last name" {...field} />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-white">
                 This is your public display last name.
               </FormDescription>
               <FormMessage />
@@ -173,7 +173,7 @@ export default function ProfileForm() {
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription>Select your departure city</FormDescription>
+              <FormDescription className="text-white">Select your departure city</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -209,7 +209,7 @@ export default function ProfileForm() {
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription>Select your destination city</FormDescription>
+              <FormDescription className="text-white">Select your destination city</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -227,7 +227,7 @@ export default function ProfileForm() {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
+                        "w-[240px] pl-3 text-left font-normal bg-transparent hover:bg-white/20",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -240,7 +240,7 @@ export default function ProfileForm() {
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 text-black" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}
@@ -249,11 +249,12 @@ export default function ProfileForm() {
                       date < new Date()
                     }
                     initialFocus
+                    className="bg-transparent bg-black/10"
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>Choose your departure date</FormDescription>
-              <FormMessage />
+              <FormDescription className="text-white">Choose your departure date</FormDescription>
+              <FormMessage/>
             </FormItem>
           )}
         />
@@ -270,7 +271,7 @@ export default function ProfileForm() {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
+                        "w-[240px] pl-3 text-left font-normal bg-transparent hover:bg-white/20",
                         !field.value && "text-muted-foreground"
                       )}
                       disabled={!watchedDepartureDate}
@@ -295,23 +296,22 @@ export default function ProfileForm() {
                     onSelect={field.onChange}
                     disabled={(date) => date < watchedDepartureDate}
                     initialFocus
+                    className="bg-transparent bg-black/10"
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>Choose your return date</FormDescription>
-              <FormMessage />
+              <FormDescription className="text-white">Choose your return date</FormDescription>
+              <FormMessage/>
             </FormItem>
           )}
         />
-
-      <div className="space-y-2">
-        <FormLabel>Phone Number</FormLabel>
-        <div className="flex gap-2">
+        
         <FormField
           control={form.control}
           name="phoneNumber.countryCode" // Cambié de phone.countryCode a phoneNumber.countryCode
           render={({ field }) => (
             <FormItem className="w-[140px]">
+              <FormLabel>Phone Number</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -331,7 +331,7 @@ export default function ProfileForm() {
                   ))}
                 </SelectContent>
               </Select>
-              <FormMessage />
+              <FormMessage/>
             </FormItem>
           )}
         />
@@ -353,15 +353,13 @@ export default function ProfileForm() {
                 />
               </FormControl>
               <FormMessage />
+              <FormDescription className="text-white">
+                Please enter your phone number with country code
+              </FormDescription>
             </FormItem>
           )}
         />
-        </div>
-        <FormDescription>
-            Please enter your phone number with country code
-        </FormDescription>
-      </div>
-
+        
         <FormField
           control={form.control}
           name="email"
@@ -381,16 +379,17 @@ export default function ProfileForm() {
                   autoComplete="email"
                 />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-white">
                 We will never share your email with anyone else.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <Button type="submit">Submit</Button>
       </form>
     </Form>
+    
+    
   );
 }

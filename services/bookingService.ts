@@ -21,9 +21,11 @@ export const createBooking = async (bookingData: BookingData) => {
     const docRef = await addDoc(collection(db, 'bookings'), {
       ...bookingData,
       createdAt: serverTimestamp(),
-      status: 'pending' // puedes agregar estados como: pending, confirmed, cancelled
+      status: 'pending'
     });
+    console.log(docRef);
     return { success: true, id: docRef.id };
+    
   } catch (error) {
     console.error('Error creating booking:', error);
     return { success: false, error };
