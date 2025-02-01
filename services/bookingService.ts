@@ -33,7 +33,7 @@ export const createBooking = async (bookingData: BookingData) => {
 };
 
 export const validateBooking = (booking: BookingData) => {
-    // Validación adicional si es necesaria
+    // Validación adicional
     const errors: string[] = [];
   
     if (booking.departureDate <= new Date()) {

@@ -1,0 +1,94 @@
+'use client'
+
+import React from 'react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { Button } from '@/components/ui/button';
+import BookingDocument from './BookingDocument';
+import { FormData } from './types';
+import { FileDown } from 'lucide-react';
+
+interface PDFGeneratorProps {
+  data: FormData;
+  isValid: boolean;
+}
+
+const PDFGenerator: React.FC<PDFGeneratorProps> = ({ data, isValid }) => {
+  // Verificación más estricta de los datos
+  const isDataComplete = Boolean(
+    data &&
+    data.name?.trim() &&
+    data.last_name?.trim() &&
+    data.origin?.trim() &&
+    data.destination?.trim() &&
+    data.departureDate &&
+    data.returnDate &&
+    data.phoneNumber?.countryCode?.trim() &&
+    data.phoneNumber?.number?.trim() &&
+    data.email?.trim()
+  );
+
+  console.log('PDFGenerator:', {
+    data,
+    isValid,
+    isDataComplete
+  });
+
+  if (!isValid || !isDataComplete) {
+    return (
+      <Button 
+        disabled 
+        className="w-full mt-4"
+        variant="outline"
+        onClick={() => {
+          console.log('Button clicked while disabled', {
+            isValid,
+            isDataComplete,
+            data
+          });
+        }}
+      >
+        <FileDown className="mr-2 h-4 w-4" />
+        Complete el formulario para descargar
+      </Button>
+    );
+  }
+
+  return (
+    <PDFDownloadLink
+      document={<BookingDocument data={data} />}
+      fileName={`reserva-${data.name?.toLowerCase()}-${data.last_name?.toLowerCase()}.pdf`}
+    >
+      {({ loading, error }) => {
+        if (error) {
+          console.error('PDF generation error:', error);
+          return (
+            <Button 
+              disabled
+              className="w-full mt-4 bg-red-600"
+              variant="outline"
+            >
+              <FileDown className="mr-2 h-4 w-4" />
+              Error al generar PDF
+            </Button>
+          );
+        }
+
+        console.log('PDFDownloadLink state:', { loading });
+
+        return (
+          <Button 
+            disabled={loading}
+            className="w-full mt-4"
+            variant="outline"
+            onClick={() => console.log('PDF download initiated')}
+          >
+            <FileDown className="mr-2 h-4 w-4" />
+            {loading ? 'Generando PDF...' : 'Descargar Reserva'}
+          </Button>
+        );
+      }}
+    </PDFDownloadLink>
+  );
+};
+
+export default PDFGenerator;

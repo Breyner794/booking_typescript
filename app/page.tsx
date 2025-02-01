@@ -16,12 +16,12 @@ export default function Home() {
             className="bm-12 h-40 w-fit"
           />
           <h1 className="text-2xl font-bold text-center">Aerolinea Express ✈️</h1>
-          <h2>Reserva Ahora tu vuelo 🛫</h2>
+          <h2>Book your flight now 🛫</h2>
           <ProfileForm />
         </div>
         <Footer/>
       </section>
-      <ImageGallery />
+      <ImageGallery/>
     </div>
   );
 }

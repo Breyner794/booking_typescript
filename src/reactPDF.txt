@@ -1,0 +1,108 @@
+import React from 'react';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { BookingData } from './types';
+
+// Estilos para el PDF
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'column',
+    backgroundColor: '#FFFFFF',
+    padding: 30,
+  },
+  header: {
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#F8F8F8',
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 12,
+    marginBottom: 5,
+  },
+  qrContainer: {
+    alignItems: 'flex-end',
+    marginTop: 20,
+  },
+  qrPlaceholder: {
+    width: 100,
+    height: 100,
+    backgroundColor: '#E5E5E5',
+  },
+});
+
+interface BookingDocumentProps {
+  data: BookingData;
+}
+
+const BookingDocument: React.FC<BookingDocumentProps> = ({ data }) => {
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Confirmación de Reserva</Text>
+          <Text style={styles.subtitle}>Detalles de su vuelo</Text>
+        </View>
+
+        {/* Información del pasajero */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Información del pasajero</Text>
+          <Text style={styles.text}>Nombre: {data.name}</Text>
+          <Text style={styles.text}>Apellido: {data.last_name}</Text>
+        </View>
+
+        {/* Detalles del vuelo */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Detalles del vuelo</Text>
+          <Text style={styles.text}>Origen: {data.origin}</Text>
+          <Text style={styles.text}>Destino: {data.destination}</Text>
+          <Text style={styles.text}>
+            Fecha de salida: {formatDate(data.departureDate)}
+          </Text>
+          <Text style={styles.text}>
+            Fecha de regreso: {formatDate(data.returnDate)}
+          </Text>
+        </View>
+
+        {/* Información de contacto */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Información de contacto</Text>
+          <Text style={styles.text}>
+            Teléfono: {data.phoneNumber.countryCode} {data.phoneNumber.number}
+          </Text>
+          <Text style={styles.text}>Email: {data.email}</Text>
+        </View>
+
+        {/* QR Code placeholder */}
+        <View style={styles.qrContainer}>
+          <View style={styles.qrPlaceholder} />
+        </View>
+      </Page>
+    </Document>
+  );
+};
+
+export default BookingDocument;

@@ -34,7 +34,8 @@ import {
 import formSchema from "../../components/validations"
 import {createBooking} from "../../services/bookingService"
 import { useToast } from "@/hooks/use-toast"
-import Footer from "@/components/footer"
+import PDFGenerator from "../../src/generadorPdf"
+
 // Definicion de las ciudades disponibles
 const CITIES = [
   { value: "CAL", label: "Cali" },
@@ -92,7 +93,6 @@ export default function ProfileForm() {
           title: "Booking Created",
           description: "Your booking has been successfully created.",
         });
-        // Opcional: resetear el formulario
         form.reset();
       } else {
         throw new Error('Failed to create booking');
@@ -105,7 +105,6 @@ export default function ProfileForm() {
         description: "There was an error creating your booking. Please try again.",
       });
     } finally {
-      // Restaurar el botón
       const submitButton = document.querySelector('button[type="submit"]');
       if (submitButton) {
         submitButton.removeAttribute('disabled');
@@ -174,7 +173,7 @@ export default function ProfileForm() {
                 </SelectContent>
               </Select>
               <FormDescription className="text-white">Select your departure city</FormDescription>
-              <FormMessage />
+              <FormMessage/>
             </FormItem>
           )}
         />
@@ -308,7 +307,7 @@ export default function ProfileForm() {
         
         <FormField
           control={form.control}
-          name="phoneNumber.countryCode" // Cambié de phone.countryCode a phoneNumber.countryCode
+          name="phoneNumber.countryCode" 
           render={({ field }) => (
             <FormItem className="w-[140px]">
               <FormLabel>Phone Number</FormLabel>
@@ -388,8 +387,9 @@ export default function ProfileForm() {
         />
         <Button type="submit">Submit</Button>
       </form>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <PDFGenerator data={form.getValues()} />
+      </form>
     </Form>
-    
-    
   );
 }
