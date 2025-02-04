@@ -2,18 +2,38 @@ import jsPDF from "jspdf";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { UseFormReturn } from "react-hook-form"; // Añade esta importación
 // import formSchema from "@/components/validations";
 
-function centerText(doc, txt, y) {
+interface FormData {
+  name: string;
+  last_name: string;
+  origin: string;
+  destination: string;
+  departureDate: Date;
+  returnDate: Date;
+  email: string;
+  phoneNumber: {
+    countryCode: string;
+    number: string;
+  };
+}
+
+function centerText(doc: jsPDF, txt: string, y: number) {
   const textWidth = doc.getTextWidth(txt);
   const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
   doc.text(txt, x, y);
 }
 
+interface PDFGeneratorProps {
+  data: FormData;
+  form: UseFormReturn<FormData>;
+}
+
 {/*data: Recibe los valores actuales del formulario (form.getValues())
   form: Recibe el objeto completo de React Hook Form*/}
 
-const PDFGenerator = ({ data, form}) => {
+const PDFGenerator = ({ data, form} : PDFGeneratorProps) => {
 
   {/*Validacion de datos cuando hay datos en los campos requeridos si no hay muestra el mensaje pero si en emal, tiene un dato numerico o 2 letras va a pasar a descargarlo*/}
   // const validarDatos = () => {
@@ -44,17 +64,22 @@ const PDFGenerator = ({ data, form}) => {
 
   const generarPDF = () => {
 
+    console.log("Form errors:", form.formState.errors);
+    console.log("Form values:", data);
+    console.log("Is form valid?", form.formState.isValid);
+
     //Al tener un error, mostrara el siguiente mensaje.
-    if (!form.formState.isValid) {
+    /*if (!form.formState.isValid) {
+      // Modificar el toast para mostrar los errores específicos
       toast({
         variant: "destructive",
         title: "Validation error",
-        description: "Please correct the errors in the form",
+        description: `Errors: ${Object.keys(form.formState.errors).map(key => 
+          `${key}: ${form.formState.errors[key]?.message}`
+        ).join(', ')}`,
       });
       return;
-    }
-
-    {/*Muestra el error si los datos de los campos estan vacios, pero si tiene algun dato al menos sea una letra en cualquier campo, sigue con su procedimiento a hacer la funcion de imprimir el PDF*/}
+    }*/
 
     // const errores = validarDatos();
     // if (errores.length > 0) {
@@ -64,6 +89,17 @@ const PDFGenerator = ({ data, form}) => {
     //   });
     //   return;
     // }
+
+    {/*Muestra el error si los datos de los campos estan vacios, pero si tiene algun dato al menos sea una letra en cualquier campo, sigue con su procedimiento a hacer la funcion de imprimir el PDF*/}
+
+    if (!data.name || !data.last_name || !data.origin || !data.destination || !data.departureDate || !data.returnDate || !data.email || !data.phoneNumber.number) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Por favor complete todos los campos antes de generar el PDF"
+      });
+      return;
+    }
 
     {/*Si no hay errores, continuamos con la generación del PDF*/}
     const doc = new jsPDF();

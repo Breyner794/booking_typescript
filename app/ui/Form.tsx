@@ -99,8 +99,8 @@ export default function ProfileForm() {
       last_name: "",
       origin: "",
       destination: "",
-      departureDate: null,
-      returnDate: null,
+      departureDate: undefined,
+      returnDate: undefined,
       phoneNumber: {
         countryCode: "",
         number: "",
